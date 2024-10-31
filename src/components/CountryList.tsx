@@ -29,8 +29,6 @@ const CountryList = () => {
     const { loading, error, data, refetch } = useQuery<{ countries: Country[] }>(GET_COUNTRIES);
 
     const handleSearchDebounce = useDebouncedCallback((code: string) => {
-        console.log('запрос был');
-        
         if (code === '') {
             refetch({
                 filter: {}
