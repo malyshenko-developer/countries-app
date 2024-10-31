@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { gql, useQuery } from "@apollo/client";
 import { Box, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { Country } from '../types';
 import CountryCard from './CountryCard';
 import Search from './Search';
+import { useDebouncedCallback } from 'use-debounce';
 
 const GET_COUNTRIES = gql`
     query GetCountries($filter: CountryFilterInput) {
@@ -27,10 +28,9 @@ const GET_COUNTRIES = gql`
 const CountryList = () => {
     const { loading, error, data, refetch } = useQuery<{ countries: Country[] }>(GET_COUNTRIES);
 
-    
-    if (error) return <p>Error {error.message}</p>
-
-    const handleSearch = (code: string) => {
+    const handleSearchDebounce = useDebouncedCallback((code: string) => {
+        console.log('запрос был');
+        
         if (code === '') {
             refetch({
                 filter: {}
@@ -44,11 +44,13 @@ const CountryList = () => {
                 }
             })
         }
-    };
+    }, 1000);
+    
+    if (error) return <p>Error {error.message}</p>
 
     return (
         <>
-            <Search onSearch={handleSearch} />
+            <Search onSearch={handleSearchDebounce} />
             {
                 loading && <p>Loading...</p>
             }
