@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { Button, Container, CssBaseline } from '@mui/material';
+import { Box, Container, CssBaseline, Typography } from '@mui/material';
 import CountryList from './components/CountryList';
 
 const App = () => {
@@ -8,7 +8,12 @@ const App = () => {
     <>
       <CssBaseline />
       <Container>
-        <CountryList />
+        <Box p={'20px 5px'}>
+          <Typography component={'h1'} variant='h3' mb={'20px'}>
+            Countries
+          </Typography>
+          <CountryList />
+        </Box>
       </Container>
     </>
   );

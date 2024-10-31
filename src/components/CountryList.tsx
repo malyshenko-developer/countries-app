@@ -1,8 +1,9 @@
 import React from 'react';
-import Flag from 'react-world-flags'
 import { gql, useQuery } from "@apollo/client";
 import { Box } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import { Country } from '../types';
+import CountryCard from './CountryCard';
 
 const GET_COUNTRIES = gql`
     query GetCountries {
@@ -13,7 +14,6 @@ const GET_COUNTRIES = gql`
             languages {
                 native
             }
-            emoji
             continent{
                 name
             }
@@ -30,13 +30,15 @@ const CountryList = () => {
     if (error) return <p>Error {error.message}</p>
 
     return (
-        <Box>
+        <Grid container spacing={{ xs: 1, sm: 2, md: 4 }}>
             {
                 data?.countries.map((country) => (
-                    <Flag code={ country.code } style={{ width: '100px', height: '70px', objectFit: 'cover' }} alt={`${country.name} flag`} />
+                    <Grid key={country.code} size={{ xs: 12, sm: 6, md: 4 }}>
+                        <CountryCard country={country} />
+                    </Grid>
                 ))
             }
-        </Box>
+        </Grid>
     )
 }
 
