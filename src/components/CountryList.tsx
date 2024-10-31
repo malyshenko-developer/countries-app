@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { gql, useQuery } from "@apollo/client";
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { Country } from '../types';
 import CountryCard from './CountryCard';
+import Search from './Search';
 
 const GET_COUNTRIES = gql`
-    query GetCountries {
-        countries(filter: {}) {
+    query GetCountries($filter: CountryFilterInput) {
+        countries(filter: $filter) {
             code
             name
             capital
@@ -24,21 +25,46 @@ const GET_COUNTRIES = gql`
 `;
 
 const CountryList = () => {
-    const { loading, error, data } = useQuery<{ countries: Country[] }>(GET_COUNTRIES);
+    const { loading, error, data, refetch } = useQuery<{ countries: Country[] }>(GET_COUNTRIES);
 
-    if (loading) return <p>Loading...</p>
+    
     if (error) return <p>Error {error.message}</p>
 
+    const handleSearch = (code: string) => {
+        if (code === '') {
+            refetch({
+                filter: {}
+            });
+        } else {
+            refetch({
+                filter: {
+                    code: {
+                        in: code
+                    }
+                }
+            })
+        }
+    };
+
     return (
-        <Grid container spacing={{ xs: 1, sm: 2, md: 4 }}>
+        <>
+            <Search onSearch={handleSearch} />
             {
-                data?.countries.map((country) => (
-                    <Grid key={country.code} size={{ xs: 12, sm: 6, md: 4 }}>
-                        <CountryCard country={country} />
-                    </Grid>
-                ))
+                loading && <p>Loading...</p>
             }
-        </Grid>
+            {
+                data?.countries.length === 0 ? <Typography>Список пуст</Typography> :
+                    <Grid container spacing={{ xs: 1, sm: 2, md: 4 }}>
+                        {
+                            data?.countries.map((country) => (
+                                <Grid key={country.code} size={{ xs: 12, sm: 6, md: 4 }}>
+                                    <CountryCard country={country} />
+                                </Grid>
+                            ))
+                        }
+                    </Grid>
+            }
+        </>
     )
 }
 

@@ -2,7 +2,7 @@ import { Box, Card, CardContent, Typography } from '@mui/material';
 import PhoneIcon from '@mui/icons-material/Phone';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
-import React from 'react'
+import React from 'react';
 import { Country } from '../types';
 import Flag from 'react-world-flags';
 import InfoItem from './InfoItem';
